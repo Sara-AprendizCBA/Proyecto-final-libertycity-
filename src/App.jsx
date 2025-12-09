@@ -7,7 +7,8 @@ import Hero from './components/Hero'
 import Footer from './components/Footer'
 import Login from './components/Login'
 import Register from './components/Register'
-import Profile from './components/Profile'   // ⬅ PERFIL
+import Profile from './components/Profile'
+import DarkModeToggle from './components/DarkModeToggle'
 
 const categorias = [
   'Mangas',
@@ -32,17 +33,13 @@ const librosEjemplo = [
 export default function App() {
   const [categoriaActiva, setCategoriaActiva] = useState('Todos')
   const [busqueda, setBusqueda] = useState('')
-  
-  // Usuario guardado en localStorage
+
   const [usuarioLogueado, setUsuarioLogueado] = useState(
     JSON.parse(localStorage.getItem('usuario')) || null
   )
 
-  // LOGIN / REGISTER
   const [showLogin, setShowLogin] = useState(false)
   const [showRegister, setShowRegister] = useState(false)
-
-  // PERFIL
   const [showProfile, setShowProfile] = useState(false)
 
   const librosFiltrados = librosEjemplo.filter((libro) => {
@@ -69,7 +66,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 py-8">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 text-gray-900 dark:text-white py-8 transition-colors duration-300">
 
       {/* Header */}
       <div className="w-full px-4">
@@ -77,13 +74,13 @@ export default function App() {
           usuario={usuarioLogueado} 
           onLogout={handleLogout}
           onOpenAuth={() => setShowLogin(true)}
-          onOpenProfile={() => setShowProfile(true)}  // ➤ ESTO ACTIVA EL PERFIL
+          onOpenProfile={() => setShowProfile(true)}
         />
       </div>
 
       {/* Main */}
       <div className="max-w-6xl mx-auto px-4 mt-4">
-        <main className="bg-white rounded-xl shadow p-6">
+        <main className="bg-white dark:bg-slate-800 rounded-xl shadow p-6 transition-colors duration-300">
           <Hero />
           <Search busqueda={busqueda} setBusqueda={setBusqueda} />
 
@@ -96,7 +93,7 @@ export default function App() {
           <BookGrid libros={librosFiltrados} />
 
           {librosFiltrados.length === 0 && (
-            <p className="text-center text-gray-500 mt-10">
+            <p className="text-center text-gray-400 mt-10">
               No se encontraron libros.
             </p>
           )}
