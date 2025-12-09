@@ -1,38 +1,3 @@
-// import { useState } from 'react'
-// import reactLogo from './assets/react.svg'
-// import viteLogo from '/vite.svg'
-// import './App.css'
-
-// function App() {
-//   const [count, setCount] = useState(0)
-
-//   return (
-//     <>
-//       <div>
-//         <a href="https://vite.dev" target="_blank">
-//           <img src={viteLogo} className="logo" alt="Vite logo" />
-//         </a>
-//         <a href="https://react.dev" target="_blank">
-//           <img src={reactLogo} className="logo react" alt="React logo" />
-//         </a>
-//       </div>
-//       <h1>Vite + React</h1>
-//       <div className="card">
-//         <button onClick={() => setCount((count) => count + 1)}>
-//           count is {count}
-//         </button>
-//         <p>
-//           Edit <code>src/App.jsx</code> and save to test HMR
-//         </p>
-//       </div>
-//       <p className="read-the-docs">
-//         Click on the Vite and React logos to learn more
-//       </p>
-//     </>
-//   )
-// }
-
-// export default App
 import { useState } from 'react'
 import Header from './components/Header'
 import Search from './components/Search'
@@ -40,6 +5,9 @@ import CategoryList from './components/CategoryList'
 import BookGrid from './components/BookGrid'
 import Hero from './components/Hero'
 import Footer from './components/Footer'
+import Login from './components/Login'
+import Register from './components/Register'
+import Profile from './components/Profile'   // ⬅ PERFIL
 
 const categorias = [
   'Mangas',
@@ -64,28 +32,61 @@ const librosEjemplo = [
 export default function App() {
   const [categoriaActiva, setCategoriaActiva] = useState('Todos')
   const [busqueda, setBusqueda] = useState('')
+  
+  // Usuario guardado en localStorage
+  const [usuarioLogueado, setUsuarioLogueado] = useState(
+    JSON.parse(localStorage.getItem('usuario')) || null
+  )
+
+  // LOGIN / REGISTER
+  const [showLogin, setShowLogin] = useState(false)
+  const [showRegister, setShowRegister] = useState(false)
+
+  // PERFIL
+  const [showProfile, setShowProfile] = useState(false)
 
   const librosFiltrados = librosEjemplo.filter((libro) => {
     const coincideCategoria =
       categoriaActiva === 'Todos' || libro.categoria === categoriaActiva
+
     const coincideBusqueda = libro.titulo
       .toLowerCase()
       .includes(busqueda.toLowerCase())
+
     return coincideCategoria && coincideBusqueda
   })
 
+  const handleLogin = (userData) => {
+    setUsuarioLogueado(userData)
+    localStorage.setItem('usuario', JSON.stringify(userData))
+    setShowLogin(false)
+  }
+
+  const handleLogout = () => {
+    setUsuarioLogueado(null)
+    localStorage.removeItem('usuario')
+    setShowProfile(false)
+  }
+
   return (
     <div className="min-h-screen bg-slate-50 py-8">
-      {/* Full-width header */}
+
+      {/* Header */}
       <div className="w-full px-4">
-        <Header />
+        <Header 
+          usuario={usuarioLogueado} 
+          onLogout={handleLogout}
+          onOpenAuth={() => setShowLogin(true)}
+          onOpenProfile={() => setShowProfile(true)}  // ➤ ESTO ACTIVA EL PERFIL
+        />
       </div>
 
-      {/* Centered content */}
+      {/* Main */}
       <div className="max-w-6xl mx-auto px-4 mt-4">
         <main className="bg-white rounded-xl shadow p-6">
           <Hero />
           <Search busqueda={busqueda} setBusqueda={setBusqueda} />
+
           <CategoryList
             categorias={categorias}
             categoriaActiva={categoriaActiva}
@@ -95,16 +96,49 @@ export default function App() {
           <BookGrid libros={librosFiltrados} />
 
           {librosFiltrados.length === 0 && (
-            <p className="text-center text-gray-500 mt-10">No se encontraron libros.</p>
+            <p className="text-center text-gray-500 mt-10">
+              No se encontraron libros.
+            </p>
           )}
         </main>
       </div>
 
-      {/* Full-width footer */}
+      {/* Footer */}
       <div className="w-full mt-8 px-4">
         <Footer />
       </div>
+
+      {/* LOGIN */}
+      {showLogin && (
+        <Login 
+          onClose={() => setShowLogin(false)} 
+          onLogin={handleLogin}
+          onOpenRegister={() => {
+            setShowLogin(false)
+            setShowRegister(true)
+          }}
+        />
+      )}
+
+      {/* REGISTER */}
+      {showRegister && (
+        <Register 
+          onClose={() => setShowRegister(false)}
+          onOpenLogin={() => {
+            setShowRegister(false)
+            setShowLogin(true)
+          }}
+        />
+      )}
+
+      {/* PROFILE */}
+      {showProfile && usuarioLogueado && (
+        <Profile 
+          usuario={usuarioLogueado}
+          onClose={() => setShowProfile(false)}
+          onLogout={handleLogout}
+        />
+      )}
     </div>
   )
 }
-
