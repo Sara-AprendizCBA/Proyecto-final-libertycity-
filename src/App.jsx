@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Header from './components/Header'
 import Search from './components/Search'
 import CategoryList from './components/CategoryList'
@@ -7,17 +7,9 @@ import Hero from './components/Hero'
 import Footer from './components/Footer'
 import Login from './components/Login'
 import Register from './components/Register'
-import Profile from './components/Profile'   // ⬅ PERFIL
+import Profile from './components/Profile'
 
-const categorias = [
-  'Mangas',
-  'Comics',
-  'Romance',
-  'Terror',
-  'Ciencia Ficción',
-  'Datos Científicos',
-]
-
+const categorias = [ 'Mangas','Comics','Romance','Terror','Ciencia Ficción','Datos Científicos' ]
 const librosEjemplo = [
   { id: 1, titulo: 'Naruto Vol.1', categoria: 'Mangas' },
   { id: 2, titulo: 'Dragon Ball Z', categoria: 'Mangas' },
@@ -32,34 +24,47 @@ const librosEjemplo = [
 export default function App() {
   const [categoriaActiva, setCategoriaActiva] = useState('Todos')
   const [busqueda, setBusqueda] = useState('')
-  
-  // Usuario guardado en localStorage
+
+  // usuario (persistente)
   const [usuarioLogueado, setUsuarioLogueado] = useState(
     JSON.parse(localStorage.getItem('usuario')) || null
   )
 
-  // LOGIN / REGISTER
   const [showLogin, setShowLogin] = useState(false)
   const [showRegister, setShowRegister] = useState(false)
-
-  // PERFIL
   const [showProfile, setShowProfile] = useState(false)
+
+  useEffect(() => {
+    // Si hay usuario en localStorage, sincroniza con estado
+    const u = JSON.parse(localStorage.getItem('usuario'))
+    if (u) setUsuarioLogueado(u)
+  }, [])
 
   const librosFiltrados = librosEjemplo.filter((libro) => {
     const coincideCategoria =
       categoriaActiva === 'Todos' || libro.categoria === categoriaActiva
-
-    const coincideBusqueda = libro.titulo
-      .toLowerCase()
-      .includes(busqueda.toLowerCase())
-
+    const coincideBusqueda = libro.titulo.toLowerCase().includes(busqueda.toLowerCase())
     return coincideCategoria && coincideBusqueda
   })
 
+  // handleLogin usado por Login.jsx y handleRegister usado por Register.jsx
   const handleLogin = (userData) => {
-    setUsuarioLogueado(userData)
-    localStorage.setItem('usuario', JSON.stringify(userData))
+    // userData: { nombre, email, descripcion?, avatar? }
+    const user = {
+      nombre: userData.nombre || 'Usuario',
+      email: userData.email || userData.email,
+      descripcion: userData.descripcion || '',
+      avatar: userData.avatar || ''
+    }
+    setUsuarioLogueado(user)
+    localStorage.setItem('usuario', JSON.stringify(user))
     setShowLogin(false)
+    setShowRegister(false)
+  }
+
+  const handleRegister = (userData) => {
+    // idéntico a login: registra localmente y loguea
+    handleLogin(userData)
   }
 
   const handleLogout = () => {
@@ -69,75 +74,52 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 py-8">
-
-      {/* Header */}
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 py-8 transition-all">
       <div className="w-full px-4">
-        <Header 
-          usuario={usuarioLogueado} 
+        <Header
+          usuario={usuarioLogueado}
           onLogout={handleLogout}
           onOpenAuth={() => setShowLogin(true)}
-          onOpenProfile={() => setShowProfile(true)}  // ➤ ESTO ACTIVA EL PERFIL
+          onOpenProfile={() => setShowProfile(true)}
         />
       </div>
 
-      {/* Main */}
       <div className="max-w-6xl mx-auto px-4 mt-4">
-        <main className="bg-white rounded-xl shadow p-6">
+        <main className="bg-white dark:bg-slate-800 rounded-xl shadow p-6">
           <Hero />
           <Search busqueda={busqueda} setBusqueda={setBusqueda} />
-
           <CategoryList
             categorias={categorias}
             categoriaActiva={categoriaActiva}
             setCategoriaActiva={setCategoriaActiva}
           />
-
           <BookGrid libros={librosFiltrados} />
-
           {librosFiltrados.length === 0 && (
-            <p className="text-center text-gray-500 mt-10">
-              No se encontraron libros.
-            </p>
+            <p className="text-center text-gray-500 mt-10">No se encontraron libros.</p>
           )}
         </main>
       </div>
 
-      {/* Footer */}
-      <div className="w-full mt-8 px-4">
-        <Footer />
-      </div>
+      <div className="w-full mt-8 px-4"><Footer /></div>
 
-      {/* LOGIN */}
       {showLogin && (
-        <Login 
-          onClose={() => setShowLogin(false)} 
+        <Login
+          onClose={() => setShowLogin(false)}
           onLogin={handleLogin}
-          onOpenRegister={() => {
-            setShowLogin(false)
-            setShowRegister(true)
-          }}
+          onOpenRegister={() => { setShowLogin(false); setShowRegister(true) }}
         />
       )}
 
-      {/* REGISTER */}
       {showRegister && (
-        <Register 
+        <Register
           onClose={() => setShowRegister(false)}
-          onOpenLogin={() => {
-            setShowRegister(false)
-            setShowLogin(true)
-          }}
+          onRegister={handleRegister}
+          onOpenLogin={() => { setShowRegister(false); setShowLogin(true) }}
         />
       )}
 
-      {/* PROFILE */}
       {showProfile && usuarioLogueado && (
-        <Profile 
-          usuario={usuarioLogueado}
-          onClose={() => setShowProfile(false)}
-          onLogout={handleLogout}
-        />
+        <Profile usuario={usuarioLogueado} onClose={() => setShowProfile(false)} onLogout={handleLogout} />
       )}
     </div>
   )
