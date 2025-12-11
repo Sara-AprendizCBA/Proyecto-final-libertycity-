@@ -5,79 +5,88 @@ import DarkModeToggle from "./DarkModeToggle";
 export default function Header({ usuario, onLogout, onOpenAuth, onOpenProfile }) {
     const [open, setOpen] = useState(false);
 
+    const avatarDefault =
+        "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png";
+
     return (
-        <header className="mb-6 bg-white dark:bg-slate-900 dark:text-white transition-colors duration-300">
-            <div className="flex items-center justify-between">
-                
-                {/* LOGO */}
-                <div className="flex items-center gap-4">
+        <header className="mb-6 bg-white dark:bg-slate-900 dark:text-white 
+                          transition-colors duration-300 shadow-sm border-b border-gray-200 dark:border-slate-800">
+
+            <div className="flex items-center justify-between px-4 py-3">
+
+                {/* LOGO + NOMBRE */}
+                <div className="flex items-center gap-3">
                     <img 
                         src={logo} 
                         alt="libertycity logo" 
-                        className="h-12 w-12 object-contain"
+                        className="h-12 w-12 object-contain opacity-95"
                     />
+
                     <div>
-                        <h1 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-white">
+                        <h1 className="text-xl font-bold tracking-tight">
                             libertycity
                         </h1>
-                        <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
+                        <p className="text-xs text-gray-600 dark:text-gray-400">
                             Una página para entretener
                         </p>
                     </div>
                 </div>
 
-                {/* NAV DESKTOP */}
-                <nav className="hidden md:flex items-center gap-6 text-sm text-gray-600 dark:text-gray-200">
-                    <a className="hover:text-gray-900 dark:hover:text-white" href="#">Inicio</a>
-                    <a className="hover:text-gray-900 dark:hover:text-white" href="#">Categorías</a>
-                    <a className="hover:text-gray-900 dark:hover:text-white" href="#">Novedades</a>
-                    <a className="hover:text-gray-900 dark:hover:text-white" href="#">Autores</a>
-                    <a className="hover:text-gray-900 dark:hover:text-white" href="#">Mi Biblioteca</a>
+                {/* NAVEGACIÓN DESKTOP */}
+                <nav className="hidden md:flex items-center gap-6 text-sm text-gray-600 dark:text-gray-300">
+                    {["Inicio", "Categorías", "Novedades", "Autores", "Mi Biblioteca"].map((item) => (
+                        <a key={item} className="hover:text-blue-600 dark:hover:text-blue-400 transition">
+                            {item}
+                        </a>
+                    ))}
                 </nav>
 
-                {/* DERECHA */}
-                <div className="hidden md:flex items-center gap-3">
+                {/* LADO DERECHO */}
+                <div className="hidden md:flex items-center gap-4">
 
-                    {/* MODO OSCURO */}
+                    {/* DARK MODE */}
                     <DarkModeToggle />
 
                     {/* SUBIR */}
                     <button className="inline-flex items-center gap-2 px-3 py-1.5 
-                        border rounded text-sm 
+                        border rounded-lg text-sm 
                         text-gray-700 hover:bg-gray-100 
                         dark:text-gray-200 dark:border-gray-700 dark:hover:bg-slate-800 
                         transition">
-                        <i className="fa-solid fa-upload"></i>
-                        Subir
+                        <i className="fa-solid fa-upload"></i> Subir
                     </button>
 
-                    {/* LOGIN O PERFIL */}
+                    {/* LOGIN / PERFIL */}
                     {!usuario ? (
                         <button 
                             onClick={onOpenAuth}
-                            className="inline-flex items-center gap-2 px-3 py-1.5 rounded 
-                                bg-blue-600 text-white text-sm hover:bg-blue-700 transition"
+                            className="px-4 py-1.5 bg-blue-600 text-white rounded-lg 
+                                       hover:bg-blue-700 transition text-sm font-medium"
                         >
-                            <i className="fa-solid fa-right-to-bracket"></i>
                             Entrar
                         </button>
                     ) : (
                         <button
                             onClick={onOpenProfile}
-                            className="inline-flex items-center gap-2 px-3 py-1.5 rounded 
-                                bg-blue-500 text-white text-sm hover:bg-blue-600 transition"
+                            className="p-1.5 rounded-full 
+                                       bg-slate-100 dark:bg-slate-800 
+                                       hover:bg-slate-200 dark:hover:bg-slate-700 
+                                       transition border border-gray-300 dark:border-gray-700"
                         >
-                            <i className="fa-solid fa-user-circle"></i>
-                            {usuario.nombre || "Mi Perfil"}
+                            {/* AVATAR SOLO Y CIRCULAR */}
+                            <img
+                                src={usuario.avatar || avatarDefault}
+                                className="w-10 h-10 rounded-full object-cover border border-gray-300 dark:border-gray-600"
+                                alt="avatar"
+                            />
                         </button>
                     )}
                 </div>
 
-                {/* MENÚ MÓVIL */}
+                {/* NAV MÓVIL – HAMBURGER */}
                 <button
-                    className="md:hidden inline-flex items-center justify-center p-2 rounded-lg 
-                    text-gray-600 hover:bg-gray-100 
-                    dark:text-gray-200 dark:hover:bg-slate-700 transition"
+                    className="md:hidden p-2 rounded-lg text-gray-700 dark:text-gray-200 
+                               hover:bg-gray-100 dark:hover:bg-slate-700 transition"
                     onClick={() => setOpen((s) => !s)}
                 >
                     <i className="fa-solid fa-bars text-xl"></i>
@@ -86,33 +95,28 @@ export default function Header({ usuario, onLogout, onOpenAuth, onOpenProfile })
 
             {/* MENÚ MÓVIL */}
             {open && (
-                <div className="mt-3 md:hidden bg-white dark:bg-slate-800 border dark:border-gray-700 rounded-md p-4 transition">
-                    <div className="flex flex-col gap-3 text-gray-700 dark:text-gray-200">
-                        <a href="#">Inicio</a>
-                        <a href="#">Categorías</a>
-                        <a href="#">Novedades</a>
-                        <a href="#">Autores</a>
-                        <a href="#">Mi Biblioteca</a>
+                <div className="md:hidden px-4 pb-4 bg-white dark:bg-slate-900 border-t dark:border-slate-800 animate-fadeIn">
 
+                    <div className="flex flex-col gap-4 mt-4 text-gray-700 dark:text-gray-200">
+
+                        {["Inicio", "Categorías", "Novedades", "Autores", "Mi Biblioteca"].map((item) => (
+                            <a key={item} className="text-sm">{item}</a>
+                        ))}
+
+                        {/* BOTONES */}
                         <div className="flex gap-2 mt-2">
                             {!usuario ? (
                                 <button 
                                     onClick={() => { setOpen(false); onOpenAuth(); }}
-                                    className="flex-1 inline-flex items-center justify-center gap-2 
-                                    px-3 py-2 rounded text-sm 
-                                    bg-blue-600 text-white hover:bg-blue-700"
+                                    className="flex-1 bg-blue-600 text-white py-2 rounded-lg"
                                 >
-                                    <i className="fa-solid fa-user"></i>
                                     Iniciar sesión
                                 </button>
                             ) : (
                                 <button 
                                     onClick={() => { setOpen(false); onOpenProfile(); }}
-                                    className="flex-1 inline-flex items-center justify-center gap-2 
-                                    px-3 py-2 rounded text-sm 
-                                    bg-blue-500 text-white hover:bg-blue-600"
+                                    className="flex-1 bg-blue-500 text-white py-2 rounded-lg"
                                 >
-                                    <i className="fa-solid fa-user-circle"></i>
                                     Mi Perfil
                                 </button>
                             )}
