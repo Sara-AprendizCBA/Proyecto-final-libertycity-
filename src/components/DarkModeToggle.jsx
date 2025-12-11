@@ -2,16 +2,18 @@ import { useEffect, useState } from "react";
 
 export default function DarkModeToggle() {
   const [dark, setDark] = useState(() => {
-    const stored = localStorage.getItem("theme");
-    return stored === "dark";
+    const saved = localStorage.getItem("theme");
+    return saved === "dark";
   });
 
   useEffect(() => {
+    const html = document.documentElement;
+
     if (dark) {
-      document.documentElement.classList.add("dark");
+      html.classList.add("dark");
       localStorage.setItem("theme", "dark");
     } else {
-      document.documentElement.classList.remove("dark");
+      html.classList.remove("dark");
       localStorage.setItem("theme", "light");
     }
   }, [dark]);
@@ -19,20 +21,17 @@ export default function DarkModeToggle() {
   return (
     <button
       onClick={() => setDark(!dark)}
-      aria-label="Toggle dark mode"
       className="
-        inline-flex items-center justify-center 
-        p-2 rounded-lg 
-        text-gray-700 hover:bg-gray-200 
-        dark:text-gray-200 dark:hover:bg-slate-700 
+        w-10 h-10
+        flex items-center justify-center
+        rounded-full
+        bg-gray-200 dark:bg-slate-700
+        text-gray-800 dark:text-yellow-300
         transition-all duration-300
+        hover:scale-110
       "
     >
-      {dark ? (
-        <i className="fa-solid fa-sun text-xl"></i>
-      ) : (
-        <i className="fa-solid fa-moon text-xl"></i>
-      )}
+      {dark ? "☀️" : "🌙"}
     </button>
   );
 }
