@@ -1,9 +1,6 @@
 import { useState } from "react";
-<
 import logoLight from "../assets/logo_light.png";
 import logoDark from "../assets/logo_dark.png";
-
-import logo from "../assets/logo_light.png";
 
 import DarkModeToggle from "./DarkModeToggle";
 
@@ -21,21 +18,19 @@ export default function Header({ usuario, onLogout, onOpenAuth, onOpenProfile })
 
                 {/* LOGO + NOMBRE */}
                 <div className="flex items-center gap-3">
-                    <img 
 
+                    {/* Logo modo claro */}
+                    <img 
                         src={logoLight} 
                         alt="libertycity logo" 
                         className="h-12 w-12 object-contain opacity-95 rounded-full block dark:hidden"
                     />
+
+                    {/* Logo modo oscuro */}
                     <img 
                         src={logoDark} 
                         alt="libertycity logo dark" 
                         className="h-12 w-12 object-contain opacity-95 rounded-full hidden dark:block"
-
-                        src={logo} 
-                        alt="libertycity logo" 
-                        className="h-12 w-12 object-contain opacity-95"
-
                     />
 
                     <div>
@@ -89,7 +84,6 @@ export default function Header({ usuario, onLogout, onOpenAuth, onOpenProfile })
                                        hover:bg-slate-200 dark:hover:bg-slate-700 
                                        transition border border-gray-300 dark:border-gray-700"
                         >
-                            {/* AVATAR SOLO Y CIRCULAR */}
                             <img
                                 src={usuario.avatar || avatarDefault}
                                 className="w-10 h-10 rounded-full object-cover border border-gray-300 dark:border-gray-600"
