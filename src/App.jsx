@@ -7,7 +7,11 @@ import Hero from './components/Hero'
 import Footer from './components/Footer'
 import Login from './components/Login'
 import Register from './components/Register'
+
 import Profile from './components/Profile'
+
+import Profile from './components/Profile
+
 import DarkModeToggle from './components/DarkModeToggle'
 
 const categorias = [
@@ -18,6 +22,8 @@ const categorias = [
   'Ciencia Ficción',
   'Datos Científicos',
 ]
+
+const categorias = [ 'Mangas','Comics','Romance','Terror','Ciencia Ficción','Datos Científicos' ]
 const librosEjemplo = [
   { id: 1, titulo: 'Naruto Vol.1', categoria: 'Mangas' },
   { id: 2, titulo: 'Dragon Ball Z', categoria: 'Mangas' },
@@ -81,8 +87,15 @@ export default function App() {
   }
 
   return (
+
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900 text-gray-900 dark:text-white py-8 transition-colors duration-300">
       {/* Header */}
+
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 py-8 transition-all">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 text-gray-900 dark:text-white py-8 transition-colors duration-300">
+
+      {/* Header */}
+
       <div className="w-full px-4">
         <Header
           usuario={usuarioLogueado}
@@ -91,8 +104,18 @@ export default function App() {
           onOpenProfile={() => setShowProfile(true)}
         />
       </div>
+
       <div className="max-w-6xl mx-auto px-4 mt-4">
         <main className="bg-white dark:bg-slate-800 rounded-xl shadow p-6 transition-colors duration-300">
+
+
+      <div className="max-w-6xl mx-auto px-4 mt-4">
+
+        <main className="bg-white dark:bg-slate-800 rounded-xl shadow p-6">
+
+        <main className="bg-white dark:bg-slate-800 rounded-xl shadow p-6 transition-colors duration-300">
+
+
           <Hero />
           <Search busqueda={busqueda} setBusqueda={setBusqueda} />
           <CategoryList
@@ -102,11 +125,22 @@ export default function App() {
           />
           <BookGrid libros={librosFiltrados} />
           {librosFiltrados.length === 0 && (
+
             <p className="text-center text-gray-500 mt-10">No se encontraron libros.</p>
+
+            <p className="text-center text-gray-400 mt-10">
+              No se encontraron libros.
+            </p>
+
           )}
         </main>
       </div>
+
       <div className="w-full mt-8 px-4"><Footer /></div>
+
+
+      <div className="w-full mt-8 px-4"><Footer /></div>
+
       {showLogin && (
         <Login
           onClose={() => setShowLogin(false)}
@@ -121,6 +155,7 @@ export default function App() {
           onOpenLogin={() => { setShowRegister(false); setShowLogin(true) }}
         />
       )}
+
       {showProfile && usuarioLogueado && (
         <Profile usuario={usuarioLogueado} onClose={() => setShowProfile(false)} onLogout={handleLogout} />
       )}
