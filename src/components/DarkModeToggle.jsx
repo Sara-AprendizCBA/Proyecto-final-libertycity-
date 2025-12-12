@@ -1,39 +1,49 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from "react";
 
 export default function DarkModeToggle() {
+  // Por defecto, modo claro (false)
   const [dark, setDark] = useState(() => {
-    try {
-      const stored = localStorage.getItem('theme')
-      if (stored) return stored === 'dark'
-      return false
-    } catch (e) {
-      return false
-    }
-  })
+    const saved = localStorage.getItem("theme");
+    if (saved === "dark") return true;
+    // Si no hay preferencia, forzar modo claro
+    return false;
+  });
 
   useEffect(() => {
-    try {
-      if (dark) {
-        document.documentElement.classList.add('dark')
-        localStorage.setItem('theme', 'dark')
-      } else {
-        document.documentElement.classList.remove('dark')
-        localStorage.setItem('theme', 'light')
-      }
-    } catch (e) {}
-  }, [dark])
+    const html = document.documentElement;
+    if (dark) {
+      html.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      html.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  }, [dark]);
+
+  // Al cargar, si no hay preferencia, asegurarse de que esté en claro
+  useEffect(() => {
+    const saved = localStorage.getItem("theme");
+    if (!saved) {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  }, []);
 
   return (
     <button
-      onClick={() => setDark((d) => !d)}
-      aria-label="Toggle dark mode"
-      className="inline-flex items-center justify-center p-2 rounded-lg text-gray-600 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-slate-700"
+      onClick={() => setDark((prev) => !prev)}
+      className="
+        w-10 h-10
+        flex items-center justify-center
+        rounded-full
+        bg-gray-200 dark:bg-slate-700
+        text-gray-800 dark:text-yellow-300
+        transition-all duration-300
+        hover:scale-110
+      "
+      aria-label="Cambiar modo oscuro/claro"
     >
-      {dark ? (
-        <i className="fas fa-sun" aria-hidden="true"></i>
-      ) : (
-        <i className="fas fa-moon" aria-hidden="true"></i>
-      )}
+      {dark ? "☀️" : "🌙"}
     </button>
-  )
+  );
 }
