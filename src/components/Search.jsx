@@ -7,7 +7,7 @@ export default function Search({ busqueda, setBusqueda }) {
         placeholder="Buscar libro..."
         value={busqueda}
         onChange={(e) => setBusqueda(e.target.value)}
-        className="w-full pl-12 p-3 rounded-xl border outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full pl-12 p-3 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-900 dark:text-gray-100 outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 placeholder-gray-400 dark:placeholder-gray-400"
       />
     </div>
   )

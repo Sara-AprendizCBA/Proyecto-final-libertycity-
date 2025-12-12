@@ -1,5 +1,10 @@
 import { useState } from "react";
+<
+import logoLight from "../assets/logo_light.png";
+import logoDark from "../assets/logo_dark.png";
+
 import logo from "../assets/logo_light.png";
+
 import DarkModeToggle from "./DarkModeToggle";
 
 export default function Header({ usuario, onLogout, onOpenAuth, onOpenProfile }) {
@@ -17,9 +22,20 @@ export default function Header({ usuario, onLogout, onOpenAuth, onOpenProfile })
                 {/* LOGO + NOMBRE */}
                 <div className="flex items-center gap-3">
                     <img 
+
+                        src={logoLight} 
+                        alt="libertycity logo" 
+                        className="h-12 w-12 object-contain opacity-95 rounded-full block dark:hidden"
+                    />
+                    <img 
+                        src={logoDark} 
+                        alt="libertycity logo dark" 
+                        className="h-12 w-12 object-contain opacity-95 rounded-full hidden dark:block"
+
                         src={logo} 
                         alt="libertycity logo" 
                         className="h-12 w-12 object-contain opacity-95"
+
                     />
 
                     <div>

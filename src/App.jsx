@@ -7,7 +7,11 @@ import Hero from './components/Hero'
 import Footer from './components/Footer'
 import Login from './components/Login'
 import Register from './components/Register'
+
+import Profile from './components/Profile'
+
 import Profile from './components/Profile
+
 import DarkModeToggle from './components/DarkModeToggle'
 
 const categorias = [
@@ -83,6 +87,10 @@ export default function App() {
   }
 
   return (
+
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 text-gray-900 dark:text-white py-8 transition-colors duration-300">
+      {/* Header */}
+
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900 py-8 transition-all">
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900 text-gray-900 dark:text-white py-8 transition-colors duration-300">
 
@@ -98,10 +106,15 @@ export default function App() {
       </div>
 
       <div className="max-w-6xl mx-auto px-4 mt-4">
+        <main className="bg-white dark:bg-slate-800 rounded-xl shadow p-6 transition-colors duration-300">
+
+
+      <div className="max-w-6xl mx-auto px-4 mt-4">
 
         <main className="bg-white dark:bg-slate-800 rounded-xl shadow p-6">
 
         <main className="bg-white dark:bg-slate-800 rounded-xl shadow p-6 transition-colors duration-300">
+
 
           <Hero />
           <Search busqueda={busqueda} setBusqueda={setBusqueda} />
@@ -125,6 +138,9 @@ export default function App() {
 
       <div className="w-full mt-8 px-4"><Footer /></div>
 
+
+      <div className="w-full mt-8 px-4"><Footer /></div>
+
       {showLogin && (
         <Login
           onClose={() => setShowLogin(false)}
@@ -132,7 +148,6 @@ export default function App() {
           onOpenRegister={() => { setShowLogin(false); setShowRegister(true) }}
         />
       )}
-
       {showRegister && (
         <Register
           onClose={() => setShowRegister(false)}
