@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 
 export default function DarkModeToggle() {
+  // Estado inicial basado en localStorage
   const [dark, setDark] = useState(() => {
     const saved = localStorage.getItem("theme");
-    return saved === "dark";
+    return saved === "dark"; // true = oscuro, false = claro
   });
 
+  // Aplicar cambio de tema al HTML y guardar en localStorage
   useEffect(() => {
     const html = document.documentElement;
 
@@ -18,9 +20,19 @@ export default function DarkModeToggle() {
     }
   }, [dark]);
 
+  // Si nunca se ha guardado un tema, forzar claro por defecto
+  useEffect(() => {
+    const saved = localStorage.getItem("theme");
+    if (!saved) {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  }, []);
+
   return (
     <button
-      onClick={() => setDark(!dark)}
+      onClick={() => setDark((prev) => !prev)}
+      aria-label="Cambiar modo oscuro/claro"
       className="
         w-10 h-10
         flex items-center justify-center

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { useState, useEffect, useMemo } from "react";
 import Header from "./components/Header";
 import Search from "./components/Search";
@@ -18,6 +19,28 @@ const categorias = [
   "Ciencia Ficción",
   "Datos Científicos",
 ];
+=======
+import { useState, useEffect } from 'react'
+import Header from './components/Header'
+import Search from './components/Search'
+import CategoryList from './components/CategoryList'
+import BookGrid from './components/BookGrid'
+import Hero from './components/Hero'
+import Footer from './components/Footer'
+import Login from './components/Login'
+import Register from './components/Register'
+import Profile from './components/Profile'
+import DarkModeToggle from './components/DarkModeToggle'
+
+const categorias = [
+  'Mangas',
+  'Comics',
+  'Romance',
+  'Terror',
+  'Ciencia Ficción',
+  'Datos Científicos'
+]
+>>>>>>> d56c3d68b116ea0b9e9f86793a937b24b3266d7e
 
 const librosEjemplo = [
   {
@@ -126,13 +149,33 @@ export default function App() {
   const [soloVista, setSoloVista] = useState(false);
 
   useEffect(() => {
+<<<<<<< HEAD
     if (usuarioLogueado) {
       localStorage.setItem("usuario", JSON.stringify(usuarioLogueado));
     } else {
       localStorage.removeItem("usuario");
+=======
+    const u = JSON.parse(localStorage.getItem('usuario'))
+    if (u) setUsuarioLogueado(u)
+  }, [])
+
+  const librosFiltrados = librosEjemplo.filter((libro) => {
+    const coincideCategoria = categoriaActiva === 'Todos' || libro.categoria === categoriaActiva
+    const coincideBusqueda = libro.titulo.toLowerCase().includes(busqueda.toLowerCase())
+    return coincideCategoria && coincideBusqueda
+  })
+
+  const handleLogin = (userData) => {
+    const user = {
+      nombre: userData.nombre || 'Usuario',
+      email: userData.email || '',
+      descripcion: userData.descripcion || '',
+      avatar: userData.avatar || ''
+>>>>>>> d56c3d68b116ea0b9e9f86793a937b24b3266d7e
     }
   }, [usuarioLogueado]);
 
+<<<<<<< HEAD
   const librosFiltrados = useMemo(() => {
     return librosEjemplo.filter((libro) => {
       const coincideCategoria =
@@ -143,6 +186,11 @@ export default function App() {
       return coincideCategoria && coincideBusqueda;
     });
   }, [categoriaActiva, busqueda]);
+=======
+  const handleRegister = (userData) => {
+    handleLogin(userData)
+  }
+>>>>>>> d56c3d68b116ea0b9e9f86793a937b24b3266d7e
 
   const handleLikeLibro = (libro) => {
     const likes = JSON.parse(localStorage.getItem("likes")) || [];
@@ -157,6 +205,7 @@ export default function App() {
   };
 
   return (
+<<<<<<< HEAD
     <div className="min-h-screen bg-slate-50 py-8">
       <Header
         usuario={usuarioLogueado}
@@ -280,6 +329,78 @@ export default function App() {
           </button>
         </div>
       </div>
+=======
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 text-gray-900 dark:text-white py-8 transition-colors duration-300">
+
+      {/* Header */}
+      <div className="w-full px-4">
+        <Header
+          usuario={usuarioLogueado}
+          onLogout={handleLogout}
+          onOpenAuth={() => setShowLogin(true)}
+          onOpenProfile={() => setShowProfile(true)}
+        />
+      </div>
+
+      {/* Contenido principal */}
+      <div className="max-w-6xl mx-auto px-4 mt-4">
+        <main className="bg-white dark:bg-slate-800 rounded-xl shadow p-6 transition-colors duration-300">
+
+          <Hero />
+          <Search busqueda={busqueda} setBusqueda={setBusqueda} />
+          <CategoryList
+            categorias={categorias}
+            categoriaActiva={categoriaActiva}
+            setCategoriaActiva={setCategoriaActiva}
+          />
+
+          <BookGrid libros={librosFiltrados} />
+
+          {librosFiltrados.length === 0 && (
+            <p className="text-center text-gray-500 mt-10">
+              No se encontraron libros.
+            </p>
+          )}
+
+        </main>
+      </div>
+
+      {/* Footer */}
+      <div className="w-full mt-8 px-4">
+        <Footer />
+      </div>
+
+      {/* Ventanas modales */}
+      {showLogin && (
+        <Login
+          onClose={() => setShowLogin(false)}
+          onLogin={handleLogin}
+          onOpenRegister={() => {
+            setShowLogin(false)
+            setShowRegister(true)
+          }}
+        />
+      )}
+
+      {showRegister && (
+        <Register
+          onClose={() => setShowRegister(false)}
+          onRegister={handleRegister}
+          onOpenLogin={() => {
+            setShowRegister(false)
+            setShowLogin(true)
+          }}
+        />
+      )}
+
+      {showProfile && usuarioLogueado && (
+        <Profile
+          usuario={usuarioLogueado}
+          onClose={() => setShowProfile(false)}
+          onLogout={handleLogout}
+        />
+      )}
+>>>>>>> d56c3d68b116ea0b9e9f86793a937b24b3266d7e
     </div>
   </div>
 )}
