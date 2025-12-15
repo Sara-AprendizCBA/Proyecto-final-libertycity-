@@ -43,7 +43,7 @@ export default function DarkModeToggle() {
         hover:scale-110
       "
     >
-      {dark ? "☀️" : "🌙"}
+      <i className={`fas ${dark ? 'fa-sun' : 'fa-moon'} text-lg`} aria-hidden="true" />
     </button>
   );
 }

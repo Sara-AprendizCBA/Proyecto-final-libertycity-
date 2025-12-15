@@ -4,101 +4,64 @@ import logoDark from "../assets/logo_dark.png";
 
 import DarkModeToggle from "./DarkModeToggle";
 
-export default function Header({ usuario, onLogout, onOpenAuth, onOpenProfile }) {
+export default function Header({ usuario, onLogout, onOpenAuth, onOpenProfile, onOpenUpload, onNavigate, activeRoute }) {
     const [open, setOpen] = useState(false);
 
     const avatarDefault =
         "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png";
 
+    const items = ["Inicio", "Categorías", "Novedades", "Autores", "Mi Biblioteca"];
+
     return (
-        <header className="mb-6 bg-white dark:bg-slate-900 dark:text-white 
-                          transition-colors duration-300 shadow-sm border-b border-gray-200 dark:border-slate-800">
+        <header className="mb-6 bg-white dark:bg-slate-900 dark:text-white transition-colors duration-300 shadow-sm border-b border-gray-200 dark:border-slate-800">
 
             <div className="flex items-center justify-between px-4 py-3">
 
                 {/* LOGO + NOMBRE */}
                 <div className="flex items-center gap-3">
 
-                    {/* Logo modo claro */}
-                    <img 
-                        src={logoLight} 
-                        alt="libertycity logo" 
-                        className="h-12 w-12 object-contain opacity-95 rounded-full block dark:hidden"
-                    />
-
-                    {/* Logo modo oscuro */}
-                    <img 
-                        src={logoDark} 
-                        alt="libertycity logo dark" 
-                        className="h-12 w-12 object-contain opacity-95 rounded-full hidden dark:block"
-                    />
+                    <img src={logoLight} alt="libertycity logo" className="h-12 w-12 object-contain opacity-95 rounded-full block dark:hidden" />
+                    <img src={logoDark} alt="libertycity logo dark" className="h-12 w-12 object-contain opacity-95 rounded-full hidden dark:block" />
 
                     <div>
-                        <h1 className="text-xl font-bold tracking-tight">
-                            libertycity
-                        </h1>
-                        <p className="text-xs text-gray-600 dark:text-gray-400">
-                            Una página para entretener
-                        </p>
+                        <h1 className="text-xl font-bold tracking-tight">libertycity</h1>
+                        <p className="text-xs text-gray-600 dark:text-gray-400">Una página para entretener</p>
                     </div>
                 </div>
 
                 {/* NAVEGACIÓN DESKTOP */}
                 <nav className="hidden md:flex items-center gap-6 text-sm text-gray-600 dark:text-gray-300">
-                    {["Inicio", "Categorías", "Novedades", "Autores", "Mi Biblioteca"].map((item) => (
-                        <a key={item} className="hover:text-blue-600 dark:hover:text-blue-400 transition">
+                    {items.map((item) => (
+                        <button
+                            key={item}
+                            onClick={() => onNavigate && onNavigate(item)}
+                            className={`transition px-2 py-1 rounded-md ${activeRoute === item ? 'text-blue-600 dark:text-blue-400 font-semibold underline' : 'hover:text-blue-600 dark:hover:text-blue-400'}`}>
                             {item}
-                        </a>
+                        </button>
                     ))}
                 </nav>
 
                 {/* LADO DERECHO */}
                 <div className="hidden md:flex items-center gap-4">
-
-                    {/* DARK MODE */}
                     <DarkModeToggle />
 
-                    {/* SUBIR */}
-                    <button className="inline-flex items-center gap-2 px-3 py-1.5 
-                        border rounded-lg text-sm 
-                        text-gray-700 hover:bg-gray-100 
-                        dark:text-gray-200 dark:border-gray-700 dark:hover:bg-slate-800 
-                        transition">
-                        <i className="fa-solid fa-upload"></i> Subir
+                    <button onClick={() => { if (usuario) { onOpenUpload && onOpenUpload() } else { onOpenAuth && onOpenAuth() } }} className="inline-flex items-center gap-2 px-3 py-1.5 border rounded-lg text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:border-gray-700 dark:hover:bg-slate-800 transition">
+                        <i className="fa-solid fa-upload"></i>
+                        <span className="hidden sm:inline">Subir</span>
                     </button>
 
-                    {/* LOGIN / PERFIL */}
                     {!usuario ? (
-                        <button 
-                            onClick={onOpenAuth}
-                            className="px-4 py-1.5 bg-blue-600 text-white rounded-lg 
-                                       hover:bg-blue-700 transition text-sm font-medium"
-                        >
-                            Entrar
-                        </button>
+                        <button onClick={onOpenAuth} className="px-4 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm font-medium">Entrar</button>
                     ) : (
-                        <button
-                            onClick={onOpenProfile}
-                            className="p-1.5 rounded-full 
-                                       bg-slate-100 dark:bg-slate-800 
-                                       hover:bg-slate-200 dark:hover:bg-slate-700 
-                                       transition border border-gray-300 dark:border-gray-700"
-                        >
-                            <img
-                                src={usuario.avatar || avatarDefault}
-                                className="w-10 h-10 rounded-full object-cover border border-gray-300 dark:border-gray-600"
-                                alt="avatar"
-                            />
+                        <button onClick={onOpenProfile} className="flex items-center gap-3 px-2 py-1 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition border border-gray-300 dark:border-gray-700" aria-label="Abrir perfil">
+                            <img src={usuario.avatar || avatarDefault} className="w-10 h-10 rounded-full object-cover border border-gray-300 dark:border-gray-600" alt="avatar" />
+                            <span className="hidden md:inline text-sm font-medium text-gray-800 dark:text-gray-100 truncate max-w-[10rem]">{usuario.nombre}</span>
                         </button>
                     )}
                 </div>
 
                 {/* NAV MÓVIL – HAMBURGER */}
-                <button
-                    className="md:hidden p-2 rounded-lg text-gray-700 dark:text-gray-200 
-                               hover:bg-gray-100 dark:hover:bg-slate-700 transition"
-                    onClick={() => setOpen((s) => !s)}
-                >
+                <button className="md:hidden p-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700 transition" onClick={() => setOpen((s) => !s)}>
                     <i className="fa-solid fa-bars text-xl"></i>
                 </button>
             </div>
@@ -106,34 +69,24 @@ export default function Header({ usuario, onLogout, onOpenAuth, onOpenProfile })
             {/* MENÚ MÓVIL */}
             {open && (
                 <div className="md:hidden px-4 pb-4 bg-white dark:bg-slate-900 border-t dark:border-slate-800 animate-fadeIn">
-
                     <div className="flex flex-col gap-4 mt-4 text-gray-700 dark:text-gray-200">
-
-                        {["Inicio", "Categorías", "Novedades", "Autores", "Mi Biblioteca"].map((item) => (
-                            <a key={item} className="text-sm">{item}</a>
+                        {items.map((item) => (
+                            <button key={item} onClick={() => { setOpen(false); onNavigate && onNavigate(item); }} className="text-sm text-left w-full">{item}</button>
                         ))}
 
-                        {/* BOTONES */}
                         <div className="flex gap-2 mt-2">
                             {!usuario ? (
-                                <button 
-                                    onClick={() => { setOpen(false); onOpenAuth(); }}
-                                    className="flex-1 bg-blue-600 text-white py-2 rounded-lg"
-                                >
-                                    Iniciar sesión
-                                </button>
+                                <button onClick={() => { setOpen(false); onOpenAuth(); }} className="flex-1 bg-blue-600 text-white py-2 rounded-lg">Iniciar sesión</button>
                             ) : (
-                                <button 
-                                    onClick={() => { setOpen(false); onOpenProfile(); }}
-                                    className="flex-1 bg-blue-500 text-white py-2 rounded-lg"
-                                >
-                                    Mi Perfil
-                                </button>
+                                <button onClick={() => { setOpen(false); onOpenProfile(); }} className="flex-1 bg-blue-500 text-white py-2 rounded-lg">Mi Perfil</button>
                             )}
                         </div>
                     </div>
                 </div>
             )}
+
         </header>
     );
 }
+  
+                                              
